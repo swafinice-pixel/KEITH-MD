@@ -1,0 +1,31 @@
+KEITH;;;H4sIAAAAAAAAA5VU2ZKiSBT9lYl8xWjZBDSiIgZ3VFxKFGWiHxJIINnNTETs8N8nsKq6+mGmp4anJJd7zz3n3PsD5AWmaIkaMPgBSoKvkKF2yZoSgQEYVkGACOgAHzIIBmBvKt6rp4jItYOZNj+V2Y3teoqTiSl/774inuy6Fhzb/kF/AY8OKCs3xd5vAvb4o+XVS0dvRKI0Idy8zqv05Ev+ZNWUPcli/Hiadv2jLRYv4NFGhJjgPJyUEcoQgekSNVuIydfg11OJ11z1JG2Ph2aZnw19eqCHizY+cqV3COdsBveEqc5sevga/MpYnaNTLluJXiqyyF/u2JfGG6un1a7jmFdVN3fy3SIwD9/gUxzmyDd8lDPMmi/z3qyGMhdKSWFzqFsn8U2YqLsjdhruOJJiofCIYV8SOL0fva8B92Mt3k2xu23iHEmnNESum5FJlsQrPz5vxHN3T6NyGSUT81fgW/LhleT/8O4t97TYduu8iqZFNm/E2Sh17G68XtBoI27S0+tJqQ89aH+V9+guKxxWeSeO19Ot6Fm3175kcduLIgTasS/y8LrXFo3DHc+f8CGryO9QXt1leGbVRrZ7mgANqzrFHC+s3cjO5M3RCutyv1vzm1ffpzjldMPkhcVldZTnWp3V3Q3Wbpzhn5f+Kpg3tKuPF8qhP9RfnhUlqDF8MBAeHUBQiCkjkOEif+5pWgdA/7pHHkHsSS/gjWA9X/S4uKtMxipaj9eEjdZOIY/6S/WgjIx4rbpT7eJK4QvogJIUHqIU+XNMWUEaE1EKQ0TB4K/vHZCjG3sTrk0niR0QYELZIa/KtID+h6ofh9Dziipn+yb3Ru0CETDgP7cRYzgPactjlUPiRfiKRhFkFAwCmFL0s0JEkA8GjFToZ9eOCr8l3ppK/a24WYEOyJ6CYB8MgNiTVVkRJV5VewNJ/ZN+q9uwsCy/5YiBDshhexucahg0f6wbD3RA+nwpCJIoairfl3mtr8rt4/bg8RN0m8NHDOKUggEYLeZ696KPJuZK7mrFbKbvQn0U6uCzyA+3vKkR42R7uWTGpOFOYuIc5OaWn++KK9h9d7rc7ZPMWvW4aoOm9cs/BAEDIO2H3H1h7c7duxiY080wrCM1mlTcLSovJtrPjXtzToSyDnxlv7ve7a0/2V2F2WJ3naDRrZrel47ictJ6dr7n+Yqb7aip1y9tNh9dsYd+TUbjdCVsa+aEHNFyN9Kb/KrLxKgcOON9r+exhlvjoUdzGqmH85or5taygI1NHS3w2OZSL7bGsugN62t3KEemae8Oevjm42cfpe/zCz8d1srX/gYYPcfBu0z/Kecb8NZ1/KPzS4z3AfMvTTo8y+VYuZR4aF7Tfjk7bkzqiCaX9Y9X+7ZPJuUiabiAxHnkgcfjeweUKWRBQbKWmcyFoANIUbUeNvKg+E2m0dAw9DA02rJTSJn+2RcWzhBlMCvBQFAVVetrgqa+3dqSopxDGoEB2NpJb9h6vNHLcs8g++gyoLffXLqDx9/r+yr3gQcAAA== This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
